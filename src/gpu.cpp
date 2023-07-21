@@ -1029,6 +1029,9 @@ int create_gpu_instance()
     if (support_VK_KHR_android_surface)
         enabledExtensions.push_back("VK_KHR_android_surface");
 #endif // __ANDROID_API__ >= 26
+#if __APPLE__
+    enabledExtensions.push_back("VK_KHR_portability_enumeration");
+#endif
 
     uint32_t instance_api_version = VK_MAKE_VERSION(1, 0, 0);
     typedef VkResult(VKAPI_PTR * PFN_vkEnumerateInstanceVersion)(uint32_t * pApiVersion);
@@ -1095,6 +1098,9 @@ int create_gpu_instance()
     instanceCreateInfo.flags = 0;
     if (support_VK_KHR_portability_enumeration)
         instanceCreateInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#ifdef __APPLE__
+    instanceCreateInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#endif
     instanceCreateInfo.pApplicationInfo = &applicationInfo;
     instanceCreateInfo.enabledLayerCount = enabledLayers.size();
     instanceCreateInfo.ppEnabledLayerNames = enabledLayers.data();
